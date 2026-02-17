@@ -1,0 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900&display=swap');
+@import "tailwindcss";
+
+:root {
+  --background: #fafafa;
+  --foreground: #000000;
+  --surface: #ffffff;
+  --border: rgba(0, 0, 0, 0.1);
+  --text-muted: rgba(0, 0, 0, 0.25);
+  --text-secondary: rgba(0, 0, 0, 0.66);
+  --accent-orange: #ffb991;
+  --accent-blue: #016fff;
+  --accent-blue-bg: rgba(1, 111, 255, 0.05);
+  --accent-blue-light: #c1dbfb;
+  --accent-green: #17af5b;
+  --accent-green-bg: rgba(23, 175, 91, 0.1);
+  --accent-red: #da4545;
+  --accent-red-bg: rgba(218, 69, 69, 0.1);
+  --accent-yellow: #fff9c7;
+  --accent-yellow-text: #968b29;
+  --premium-bg: rgba(0, 51, 255, 0.1);
+  --tag-orange-bg: rgba(255, 132, 0, 0.1);
+  --tag-gray-bg: rgba(0, 0, 0, 0.05);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-border: var(--border);
+  --color-text-muted: var(--text-muted);
+  --color-text-secondary: var(--text-secondary);
+  --color-accent-orange: var(--accent-orange);
+  --color-accent-blue: var(--accent-blue);
+  --color-accent-blue-bg: var(--accent-blue-bg);
+  --color-accent-blue-light: var(--accent-blue-light);
+  --color-accent-green: var(--accent-green);
+  --color-accent-green-bg: var(--accent-green-bg);
+  --color-accent-red: var(--accent-red);
+  --color-accent-red-bg: var(--accent-red-bg);
+  --color-accent-yellow: var(--accent-yellow);
+  --color-accent-yellow-text: var(--accent-yellow-text);
+  --color-premium-bg: var(--premium-bg);
+  --color-tag-orange-bg: var(--tag-orange-bg);
+  --color-tag-gray-bg: var(--tag-gray-bg);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-feature-settings: 'salt';
+  font-optical-sizing: auto;
+  font-variation-settings: 'opsz' 32;
+}
