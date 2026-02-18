@@ -2,7 +2,7 @@
 -- BUCKET 5: FINANCIAL (4 tables) — SENSITIVE
 -- ============================================================
 
--- RLS: senior_manager+
+-- RLS: admin
 CREATE TABLE member_financial (
     id                       UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     member_id                UUID NOT NULL UNIQUE REFERENCES members(id) ON DELETE CASCADE,
@@ -20,7 +20,7 @@ CREATE TABLE member_financial (
     updated_at               TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- RLS: senior_manager+
+-- RLS: admin
 CREATE TABLE member_financial_institutions (
     id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     member_id         UUID NOT NULL REFERENCES members(id) ON DELETE CASCADE,
@@ -50,7 +50,7 @@ CREATE TABLE member_financial_cards (
     updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- RLS: senior_manager+
+-- RLS: admin
 CREATE TABLE member_financial_investments (
     id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     member_id       UUID NOT NULL REFERENCES members(id) ON DELETE CASCADE,

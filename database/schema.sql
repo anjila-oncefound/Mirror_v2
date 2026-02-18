@@ -49,7 +49,7 @@ CREATE TABLE user_profiles (
 -- AUTH HELPER: user_role() — used in all RLS policies
 -- ============================================================
 
-CREATE OR REPLACE FUNCTION auth.user_role()
+CREATE OR REPLACE FUNCTION public.user_role()
 RETURNS TEXT
 LANGUAGE sql
 STABLE

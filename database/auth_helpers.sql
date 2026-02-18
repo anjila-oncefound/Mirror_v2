@@ -1,25 +1,27 @@
 -- ============================================================
 -- RLS POLICY REFERENCE
 -- ============================================================
--- auth.user_role() is defined in schema.sql
+-- public.user_role() is defined in schema.sql
+-- Lives in public schema (Supabase protects auth schema from custom functions)
 -- Use these patterns when creating RLS policies:
 --
 -- Standard access (any staff):
---   USING (auth.user_role() IN ('admin', 'manager'))
+--   USING (public.user_role() IN ('admin', 'manager'))
 --
 -- Sensitive (senior only):
---   USING (auth.user_role() IN ('admin', 'senior_manager'))
+--   USING (public.user_role() IN ('admin', 'senior_manager'))
 --
 -- Admin only (mental health, addiction):
---   USING (auth.user_role() = 'admin')
+--   USING (public.user_role() = 'admin')
 --
 -- Manager sees own projects only:
---   USING (auth.user_role() = 'admin' OR manager_id = auth.uid())
+--   USING (public.user_role() = 'admin' OR manager_id = auth.uid())
 --
 -- Client sees own projects (future):
---   USING (auth.user_role() = 'client'
+--   USING (public.user_role() = 'client'
 --     AND client_id IN (SELECT id FROM clients WHERE user_id = auth.uid()))
 --
 -- Member sees own data (future):
---   USING (auth.user_role() = 'member'
+--   USING (public.user_role() = 'member'
 --     AND member_id = (SELECT id FROM members WHERE user_id = auth.uid()))
+
