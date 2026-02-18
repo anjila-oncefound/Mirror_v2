@@ -2,7 +2,7 @@
 -- BUCKET 10: EXPERIENCES (3 tables) — VECTOR-ENABLED
 -- ============================================================
 
-CREATE TABLE member_experiences (
+CREATE TABLE member_experiences_research_history (
     id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     member_id         UUID NOT NULL UNIQUE REFERENCES members(id) ON DELETE CASCADE,
     previous_research BOOLEAN,

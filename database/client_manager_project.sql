@@ -138,8 +138,8 @@ CREATE TABLE project_communications (
     msg_type    TEXT NOT NULL,    -- 'email', 'sms', 'whatsapp', 'system'
     subject     TEXT,
     body_html   TEXT,
-    from        TEXT,
-    to          TEXT,
+    sender        TEXT,
+    reciever          TEXT,
     bcc         TEXT,
     cc          TEXT,
     sent_by     UUID REFERENCES user_profiles(id),

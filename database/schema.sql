@@ -70,7 +70,7 @@ CREATE TABLE members ( -- Participants
     phone       TEXT,
     full_name   TEXT NOT NULL,
     registration_country TEXT,
-    status      TEXT NOT NULL DEFAULT 'active', -- active, innactive, blocked
+    status      TEXT NOT NULL DEFAULT 'active', -- active, inactive, blocked
     source      TEXT,
     created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()

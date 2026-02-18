@@ -1,11 +1,14 @@
 -- ============================================================
 -- FUNCTION: get_member_profile(UUID) → JSONB
 -- ============================================================
--- One call, one round trip, all 51 tables assembled into
+-- One call, one round trip, all tables assembled into
 -- clean nested JSON. Runs as SECURITY INVOKER so RLS applies
 -- to every sub-query. Vector columns excluded from output
 -- (6KB+ each, useless for display — use dedicated search
 -- functions for similarity queries).
+--
+-- Split into 3 jsonb_build_object() calls merged with ||
+-- because PostgreSQL limits functions to 100 arguments.
 -- ============================================================
 
 CREATE OR REPLACE FUNCTION get_member_profile(p_member_id UUID)
@@ -13,9 +16,12 @@ RETURNS JSONB
 LANGUAGE sql
 STABLE
 SECURITY INVOKER
-AS $$
-SELECT jsonb_build_object(
-
+AS $fn$
+SELECT
+-- ============================================================
+-- PART 1: Core + Buckets 1-6 (26 pairs = 52 args)
+-- ============================================================
+jsonb_build_object(
     -- Core
     'member', (
         SELECT row_to_json(t) FROM members t
@@ -119,9 +125,9 @@ SELECT jsonb_build_object(
         SELECT row_to_json(t) FROM member_financial t
         WHERE t.member_id = p_member_id
     ),
-    'financial_banking', (
+    'financial_institutions', (
         SELECT COALESCE(json_agg(t), '[]'::json)
-        FROM member_financial_banking t
+        FROM member_financial_institutions t
         WHERE t.member_id = p_member_id
     ),
     'financial_cards', (
@@ -144,8 +150,15 @@ SELECT jsonb_build_object(
         SELECT COALESCE(json_agg(t), '[]'::json)
         FROM member_property_vehicles t
         WHERE t.member_id = p_member_id
-    ),
+    )
+)
 
+||
+
+-- ============================================================
+-- PART 2: Buckets 7-12 (21 pairs = 42 args)
+-- ============================================================
+jsonb_build_object(
     -- Bucket 7: Technology
     'technology_behaviour', (
         SELECT row_to_json(t) FROM member_technology_behaviour t
@@ -195,8 +208,8 @@ SELECT jsonb_build_object(
     ),
 
     -- Bucket 10: Experiences (vectors excluded)
-    'experiences', (
-        SELECT row_to_json(t) FROM member_experiences t
+    'research_history', (
+        SELECT row_to_json(t) FROM member_experiences_research_history t
         WHERE t.member_id = p_member_id
     ),
     'experiences_life_events', (
@@ -305,8 +318,15 @@ SELECT jsonb_build_object(
         )), '[]'::json)
         FROM member_intentions_purchases t
         WHERE t.member_id = p_member_id
-    ),
+    )
+)
 
+||
+
+-- ============================================================
+-- PART 3: Buckets 13-14 + Interview Sessions (7 pairs = 14 args)
+-- ============================================================
+jsonb_build_object(
     -- Bucket 13: Media & Entertainment
     'media_subscriptions', (
         SELECT COALESCE(json_agg(t), '[]'::json)
@@ -341,10 +361,11 @@ SELECT jsonb_build_object(
         WHERE t.member_id = p_member_id
     ),
 
-    -- Interview Responses
-    'interview_responses', (
-        SELECT COALESCE(json_agg(t ORDER BY t.session_id, t.sequence_number), '[]'::json)
-        FROM member_interview_responses t
+    -- Interview Sessions
+    'interview_sessions', (
+        SELECT COALESCE(json_agg(t ORDER BY t.scheduled_at DESC), '[]'::json)
+        FROM interview_sessions t
         WHERE t.member_id = p_member_id
     )
 );
+$fn$;

@@ -98,41 +98,4 @@ CREATE TABLE data_transfers (
     created_at          TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- ============================================================
--- INDEXES
--- ============================================================
-
--- DPOs
-CREATE INDEX idx_dpos_active_jurisdiction ON dpos(jurisdiction) WHERE active = true;
-
--- Consent: member lookups
-CREATE INDEX idx_consents_member         ON member_consents(member_id);
-CREATE INDEX idx_consents_member_status  ON member_consents(member_id, consent_status);
--- "All active consents for health data scope"
-CREATE INDEX idx_consents_scope_status   ON member_consents(scope, consent_status) WHERE consent_status = 'granted';
--- "All consents under Singapore PDPA"
-CREATE INDEX idx_consents_jurisdiction   ON member_consents(jurisdiction);
--- "Find consents that include purpose X" — GIN required for array @> queries
-CREATE INDEX idx_consents_purposes       ON member_consents USING gin(purposes) WHERE consent_status = 'granted';
--- "All consents/NDAs for a project"
-CREATE INDEX idx_consents_project        ON member_consents(project_id) WHERE project_id IS NOT NULL;
-
--- Data requests
-CREATE INDEX idx_data_requests_member    ON member_data_requests(member_id);
--- "Pending requests that need handling"
-CREATE INDEX idx_data_requests_pending   ON member_data_requests(status) WHERE status = 'pending';
-
--- Retention: member lookups + expiry queries
-CREATE INDEX idx_retention_member        ON member_data_retention(member_id);
--- "What data is approaching retention deadline?" — plain index, filter in query
-CREATE INDEX idx_retention_deadline      ON member_data_retention(retain_until) WHERE disposed_at IS NULL;
-
--- Access logs: member audit trail
-CREATE INDEX idx_access_logs_member      ON data_access_logs(member_id, accessed_at DESC);
--- "Who accessed data in this time window?"
-CREATE INDEX idx_access_logs_time        ON data_access_logs(accessed_at DESC);
-
--- Transfers: member lookups
-CREATE INDEX idx_transfers_member        ON data_transfers(member_id);
--- "Active transfers to country X"
-CREATE INDEX idx_transfers_country       ON data_transfers(destination_country);
+-- INDEXES: see indexing.sql

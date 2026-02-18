@@ -1,9 +1,8 @@
 -- ============================================================
-  -- 2. PROJECT QUESTIONS — the actual questions
-  -- ============================================================
+-- PROJECT QUESTIONS — the actual questions
+-- ============================================================
 CREATE TABLE project_questions (
     id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    section_id      UUID NOT NULL REFERENCES project_question_sections(id) ON DELETE CASCADE,
     project_id      UUID NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
 
     question_text   TEXT NOT NULL,            -- "How often do you purchase organic food?"
@@ -28,8 +27,7 @@ CREATE TABLE project_questions (
     updated_at      TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
-CREATE INDEX idx_pq_project ON project_questions(project_id);
-CREATE INDEX idx_pq_section ON project_questions(section_id);
+-- INDEXES: see indexing.sql
 
 -- ============================================================
 -- 3. INTERVIEW SESSIONS — the actual interview event
@@ -54,9 +52,7 @@ CREATE TABLE interview_sessions (
     updated_at        TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
-CREATE INDEX idx_is_project ON interview_sessions(project_id);
-CREATE INDEX idx_is_member ON interview_sessions(member_id);
-CREATE INDEX idx_is_project_member ON interview_sessions(project_member_id);
+-- INDEXES: see indexing.sql
 
 -- ============================================================
 -- 4. SESSION RESPONSES — answers to questions
@@ -76,5 +72,4 @@ CREATE TABLE session_responses (
     UNIQUE(session_id, question_id)           -- one answer per question per session
 );
 
-CREATE INDEX idx_sr_session ON session_responses(session_id);
-CREATE INDEX idx_sr_question ON session_responses(question_id);
+-- INDEXES: see indexing.sql

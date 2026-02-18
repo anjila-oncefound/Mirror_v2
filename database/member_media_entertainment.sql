@@ -29,16 +29,6 @@ CREATE TABLE member_media_habits (
     updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- INDEXES: member_id
-CREATE INDEX idx_media_subscriptions_member  ON member_media_subscriptions(member_id);
-CREATE INDEX idx_media_habits_member         ON member_media_habits(member_id);
-
--- INDEXES: searchable text fields (normalized)
-CREATE INDEX idx_media_subscriptions_service ON member_media_subscriptions(LOWER(TRIM(service_name)));
-CREATE INDEX idx_media_habits_title          ON member_media_habits(LOWER(TRIM(title)));
-CREATE INDEX idx_media_habits_genre          ON member_media_habits(LOWER(TRIM(genre)));
-CREATE INDEX idx_media_habits_media_type     ON member_media_habits(LOWER(TRIM(media_type)));
-
 -- TRIGGERS: auto-set updated_at
 CREATE TRIGGER set_updated_at BEFORE UPDATE ON member_media_subscriptions
     FOR EACH ROW EXECUTE FUNCTION trigger_set_updated_at();

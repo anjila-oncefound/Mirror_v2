@@ -96,7 +96,7 @@ CREATE TABLE member_household_dependents (
     id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     member_id       UUID NOT NULL REFERENCES members(id) ON DELETE CASCADE,
     relationship    TEXT,
-    birth_year      DATE,    -- not DATE; compute age at query time
+    birth_year      DATE,    -- store full date; compute age at query time
     gender          TEXT,
     dependency      TEXT, -- Handicapped, child, special needs, financial dependents
     education_level TEXT,
