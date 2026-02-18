@@ -67,8 +67,8 @@ export default function StudyHeader({ statusLabel = "Draft", dropdownLabel = "Se
       {/* Right: URL display */}
       {urlDisplay && (
         <div className="shrink-0">
-          <div className="bg-surface border border-border rounded-xl flex items-center p-6">
-            <span className="text-[16px] text-text-secondary tracking-[-0.16px]">{urlDisplay}</span>
+          <div className="bg-surface border border-border rounded-xl flex items-center justify-between p-6">
+            <span className="text-[20px] text-[rgba(0,51,255,0.79)]">{urlDisplay}</span>
           </div>
         </div>
       )}

@@ -21,21 +21,22 @@ CREATE TABLE dpos (
     created_at   TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- 2. Consent Records (Consent + Purpose Limitation + Notification)
+-- 2. Consent & Agreement Records (Consent + Purpose Limitation + Notification + NDAs)
 CREATE TABLE member_consents (
     id             UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     member_id      UUID NOT NULL REFERENCES members(id) ON DELETE CASCADE,
+    project_id     UUID REFERENCES projects(id),              -- nullable: global consents have no project
     dpo_id         UUID REFERENCES dpos(id),
-    consent_type   TEXT NOT NULL,
-    scope          TEXT NOT NULL,
-    purposes       TEXT[] NOT NULL DEFAULT '{}',
-    status         TEXT NOT NULL DEFAULT 'granted',
+    consent_type   TEXT NOT NULL,                              -- 'data_processing', 'study_participation', 'nda', 'media_release'
+    scope          TEXT,
+    purposes       TEXT[],
+    consent_status TEXT NOT NULL DEFAULT 'granted',
     granted_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
     withdrawn_at   TIMESTAMPTZ,
     expires_at     TIMESTAMPTZ,
-    jurisdiction   TEXT NOT NULL DEFAULT 'SG-PDPA',
-    legal_basis    TEXT NOT NULL,
-    version        TEXT NOT NULL,
+    jurisdiction   TEXT,                                       -- 'SG-PDPA', etc. — nullable for NDAs
+    legal_basis    TEXT,                                       -- nullable for NDAs
+    version        TEXT,
     ip_address     TEXT,
     raw_source     JSONB,
     created_at     TIMESTAMPTZ NOT NULL DEFAULT now()
@@ -106,13 +107,15 @@ CREATE INDEX idx_dpos_active_jurisdiction ON dpos(jurisdiction) WHERE active = t
 
 -- Consent: member lookups
 CREATE INDEX idx_consents_member         ON member_consents(member_id);
-CREATE INDEX idx_consents_member_status  ON member_consents(member_id, status);
+CREATE INDEX idx_consents_member_status  ON member_consents(member_id, consent_status);
 -- "All active consents for health data scope"
-CREATE INDEX idx_consents_scope_status   ON member_consents(scope, status) WHERE status = 'granted';
+CREATE INDEX idx_consents_scope_status   ON member_consents(scope, consent_status) WHERE consent_status = 'granted';
 -- "All consents under Singapore PDPA"
 CREATE INDEX idx_consents_jurisdiction   ON member_consents(jurisdiction);
 -- "Find consents that include purpose X" — GIN required for array @> queries
-CREATE INDEX idx_consents_purposes       ON member_consents USING gin(purposes) WHERE status = 'granted';
+CREATE INDEX idx_consents_purposes       ON member_consents USING gin(purposes) WHERE consent_status = 'granted';
+-- "All consents/NDAs for a project"
+CREATE INDEX idx_consents_project        ON member_consents(project_id) WHERE project_id IS NOT NULL;
 
 -- Data requests
 CREATE INDEX idx_data_requests_member    ON member_data_requests(member_id);

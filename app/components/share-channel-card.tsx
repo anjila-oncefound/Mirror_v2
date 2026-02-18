@@ -2,7 +2,7 @@ interface StatCard {
   label: string;
   value: string;
   percentage: string;
-  barColor: string;
+  percentageColor: "green" | "red";
 }
 
 interface ShareChannelCardProps {
@@ -19,47 +19,49 @@ export default function ShareChannelCard({
   stats,
 }: ShareChannelCardProps) {
   return (
-    <div className="bg-surface border border-border rounded-xl p-8 w-full">
-      <div className="flex flex-col gap-8">
-        <div className="flex items-start justify-between">
-          <h2 className="text-[36px] tracking-[-0.72px] leading-none">
-            {title}
-          </h2>
-          <span className="text-[14px] tracking-[-0.14px] text-text-secondary">
-            {channelLabel}
-          </span>
-        </div>
+    <div className="bg-surface border border-border rounded-xl flex flex-col gap-12 p-12 w-full">
+      <h2 className="text-[36px] tracking-[-0.72px] leading-none">
+        {title}
+      </h2>
 
-        <div className="flex gap-6">
-          {stats.map((stat) => (
+      <div className="flex gap-3">
+        {stats.map((stat) => (
+          <div
+            key={stat.label}
+            className="flex-1 border border-border rounded-xl overflow-hidden flex flex-col items-center justify-between h-[164px]"
+          >
+            <span className="text-[16px] tracking-[-0.16px] pt-4">
+              {stat.label}
+            </span>
+            <span className="text-[56px] tracking-[-1.12px] leading-none">
+              {stat.value}
+            </span>
             <div
-              key={stat.label}
-              className="flex-1 border border-border rounded-xl overflow-hidden"
+              className={`w-full flex items-center justify-center p-2 ${
+                stat.percentageColor === "green"
+                  ? "bg-accent-green-bg"
+                  : "bg-accent-red-bg"
+              }`}
             >
-              <div className="p-6 flex flex-col gap-3">
-                <span className="text-[14px] tracking-[-0.14px] text-text-secondary">
-                  {stat.label}
-                </span>
-                <div className="flex gap-2.5 items-end">
-                  <span className="text-[36px] tracking-[-0.72px] leading-none">
-                    {stat.value}
-                  </span>
-                  <span className="text-[16px] tracking-[-0.16px] text-text-secondary pb-1">
-                    {stat.percentage}
-                  </span>
-                </div>
-              </div>
-              <div className={`${stat.barColor} h-[4px] w-full`} />
+              <span
+                className={`text-[16px] tracking-[-0.16px] ${
+                  stat.percentageColor === "green"
+                    ? "text-accent-green"
+                    : "text-accent-red"
+                }`}
+              >
+                {stat.percentage}
+              </span>
             </div>
-          ))}
-
-          {/* Action button */}
-          <div className="flex-1 border border-border rounded-xl flex items-center justify-center">
-            <button className="bg-[#202020] text-white rounded-lg px-6 py-3 text-[14px] tracking-[-0.14px] cursor-pointer hover:bg-[#333] transition-colors">
-              {buttonLabel}
-            </button>
           </div>
-        </div>
+        ))}
+      </div>
+
+      <div className="flex flex-col gap-3">
+        <p className="text-[24px]">{channelLabel}</p>
+        <button className="bg-[#202020] border border-[rgba(0,0,0,0.25)] text-white rounded p-6 text-[20px] text-left cursor-pointer hover:bg-[#333] transition-colors">
+          {buttonLabel}
+        </button>
       </div>
     </div>
   );

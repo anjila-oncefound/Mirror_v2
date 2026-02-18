@@ -1,31 +1,29 @@
 const segments = [
   {
-    label: "Segment 1 — Singapore",
-    total: 2040,
+    label: "Segment 1: Singapore",
     bars: [
-      { color: "bg-[#d9d9d9]", value: 1200, label: "Uncontacted" },
-      { color: "bg-[#7cb5d9]", value: 480, label: "Contacted" },
-      { color: "bg-accent-green", value: 300, label: "Qualified" },
-      { color: "bg-accent-red", value: 60, label: "Disqualified" },
+      { color: "bg-[rgba(0,0,0,0.05)]", flex: true },
+      { color: "bg-[#c5f1d8]", width: 279 },
+      { color: "bg-accent-green", width: 500 },
+      { color: "bg-accent-red", width: 225 },
     ],
   },
   {
-    label: "Segment 2 — Kuala Lumpur",
-    total: 1560,
+    label: "Segment 2: Kuala Lampur",
     bars: [
-      { color: "bg-[#d9d9d9]", value: 900, label: "Uncontacted" },
-      { color: "bg-[#7cb5d9]", value: 360, label: "Contacted" },
-      { color: "bg-accent-green", value: 240, label: "Qualified" },
-      { color: "bg-accent-red", value: 60, label: "Disqualified" },
+      { color: "bg-[rgba(0,0,0,0.05)]", flex: true },
+      { color: "bg-[#c5f1d8]", width: 79 },
+      { color: "bg-accent-green", width: 341 },
+      { color: "bg-accent-red", width: 669 },
     ],
   },
 ];
 
 const legendItems = [
-  { color: "bg-[#d9d9d9]", label: "Uncontacted" },
-  { color: "bg-[#7cb5d9]", label: "Contacted" },
-  { color: "bg-accent-green", label: "Qualified" },
-  { color: "bg-accent-red", label: "Disqualified" },
+  { color: "bg-[#f2f2f2]", label: "Outreach", percentage: "00%" },
+  { color: "bg-[#c5f1d8]", label: "Required", percentage: "00%" },
+  { color: "bg-accent-green", label: "Qualified", percentage: "00%" },
+  { color: "bg-accent-red", label: "Disqualified", percentage: "00%" },
 ];
 
 export default function PotentialMatchesScreening() {
@@ -36,12 +34,17 @@ export default function PotentialMatchesScreening() {
           <h2 className="text-[36px] tracking-[-0.72px] leading-none">
             Potential Matches Screening
           </h2>
-          <div className="flex gap-3">
+          <div className="flex flex-col gap-2 w-[176px]">
             {legendItems.map((item) => (
-              <div key={item.label} className="flex gap-2 items-center">
-                <div className={`${item.color} w-3 h-3 rounded-full`} />
-                <span className="text-[12px] tracking-[-0.12px] text-text-secondary">
-                  {item.label}
+              <div key={item.label} className="flex items-center justify-between">
+                <div className="flex gap-3 items-center">
+                  <div className={`${item.color} w-4 h-4 rounded-full`} />
+                  <span className="text-[12px] tracking-[-0.12px]">
+                    {item.label}
+                  </span>
+                </div>
+                <span className="text-[12px] tracking-[-0.12px]">
+                  {item.percentage}
                 </span>
               </div>
             ))}
@@ -51,22 +54,21 @@ export default function PotentialMatchesScreening() {
         <div className="flex flex-col gap-6">
           {segments.map((segment) => (
             <div key={segment.label} className="flex flex-col gap-3">
-              <div className="flex items-center justify-between">
-                <span className="text-[16px] tracking-[-0.16px]">
-                  {segment.label}
-                </span>
-                <span className="text-[14px] tracking-[-0.14px] text-text-secondary">
-                  {segment.total.toLocaleString()} total
-                </span>
-              </div>
-              <div className="flex h-[40px] rounded overflow-hidden w-full">
-                {segment.bars.map((bar) => (
-                  <div
-                    key={bar.label}
-                    className={`${bar.color} h-full`}
-                    style={{ width: `${(bar.value / segment.total) * 100}%` }}
-                  />
-                ))}
+              <span className="text-[20px] leading-none">
+                {segment.label}
+              </span>
+              <div className="flex h-16 rounded overflow-hidden w-full">
+                {segment.bars.map((bar, i) =>
+                  bar.flex ? (
+                    <div key={i} className={`${bar.color} h-full flex-1`} />
+                  ) : (
+                    <div
+                      key={i}
+                      className={`${bar.color} h-full shrink-0`}
+                      style={{ width: bar.width }}
+                    />
+                  )
+                )}
               </div>
             </div>
           ))}

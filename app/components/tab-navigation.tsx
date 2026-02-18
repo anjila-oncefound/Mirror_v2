@@ -8,10 +8,10 @@ const tabs = [
   { label: "Definition", href: "/study/definition", enabled: true },
   { label: "Quotation", href: "/study/quotation", enabled: true },
   { label: "Recruitment", href: "/study/recruitment", enabled: true },
-  { label: "Members", href: "#", enabled: false },
-  { label: "Sessions", href: "#", enabled: false },
+  { label: "Matches", href: "/study/matches", enabled: true },
+  { label: "Sessions", href: "/study/sessions", enabled: true },
   { label: "Analyze", href: "#", enabled: false },
-  { label: "Payments", href: "#", enabled: false },
+  { label: "Payments", href: "/study/payments", enabled: true },
   { label: "Settings", href: "/study/settings", enabled: true },
 ];
 

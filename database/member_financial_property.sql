@@ -65,18 +65,14 @@ CREATE TABLE member_financial_investments (
 -- BUCKET 6: PROPERTY (2 tables)
 -- ============================================================
 
-CREATE TABLE member_property (
-    id                           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    member_id                    UUID NOT NULL UNIQUE REFERENCES members(id) ON DELETE CASCADE,
-    primary_residence_type       TEXT,
-    primary_residence_ownership  TEXT,
-    additional_properties        INTEGER,
-    additional_property_locations TEXT[],
-    significant_assets           TEXT[],
-    raw_source                   JSONB,
-    created_at                   TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_at                   TIMESTAMPTZ NOT NULL DEFAULT now()
-);
+  CREATE TABLE member_property (
+      id                           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      member_id                    UUID NOT NULL UNIQUE REFERENCES members(id) ON DELETE CASCADE,
+      significant_assets           TEXT[],        -- 'jewelry', 'art', 'collectibles' —non-property assets
+      raw_source                   JSONB,
+      created_at                   TIMESTAMPTZ NOT NULL DEFAULT now(),
+      updated_at                   TIMESTAMPTZ NOT NULL DEFAULT now()
+  );
 
 CREATE TABLE member_property_vehicles (
     id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -93,4 +89,17 @@ CREATE TABLE member_property_vehicles (
     raw_source  JSONB,
     created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE member_property_entries (
+    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    member_id       UUID NOT NULL REFERENCES members(id) ON DELETE CASCADE,
+    property_type   TEXT,          -- 'house', 'apartment', 'condo', 'land', 'commercial'
+    ownership       TEXT,          -- 'owned', 'mortgaged', 'rented_out', 'inherited'
+    country         TEXT,
+    city            TEXT,
+    is_primary      BOOLEAN NOT NULL DEFAULT false,
+    raw_source      JSONB,
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at      TIMESTAMPTZ NOT NULL DEFAULT now()
 );

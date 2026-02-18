@@ -138,10 +138,14 @@ CREATE TABLE project_communications (
     msg_type    TEXT NOT NULL,    -- 'email', 'sms', 'whatsapp', 'system'
     subject     TEXT,
     body_html   TEXT,
+    from        TEXT,
+    to          TEXT,
+    bcc         TEXT,
+    cc          TEXT,
     sent_by     UUID REFERENCES user_profiles(id),
     sent_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
-    read_at     TIMESTAMPTZ,
-    status      TEXT NOT NULL DEFAULT 'sent',
+    read_at     TIMESTAMPTZ, -- Will come from headers, see resend api
+    status      TEXT NOT NULL DEFAULT 'sent', 
     -- 'draft', 'sent', 'delivered', 'read', 'failed', 'bounced'
     created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
 );

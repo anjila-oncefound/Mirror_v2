@@ -34,7 +34,7 @@ $$ LANGUAGE plpgsql;
 --   2. Insert into user_profiles with role = 'client'
 --   3. Link to clients table via clients.user_id
 
-CREATE TABLE user_profiles (
+CREATE TABLE user_profiles ( -- Research Network Managers
     id          UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
     name        TEXT NOT NULL,
     email       TEXT UNIQUE NOT NULL,
@@ -63,13 +63,14 @@ $$;
 -- CORE: MEMBERS
 -- ============================================================
 
-CREATE TABLE members (
+CREATE TABLE members ( -- Participants
     id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id     UUID UNIQUE REFERENCES user_profiles(id),  -- nullable until member gets portal access
     email       TEXT UNIQUE NOT NULL,
     phone       TEXT,
     full_name   TEXT NOT NULL,
-    status      TEXT NOT NULL DEFAULT 'active',
+    registration_country TEXT,
+    status      TEXT NOT NULL DEFAULT 'active', -- active, innactive, blocked
     source      TEXT,
     created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()

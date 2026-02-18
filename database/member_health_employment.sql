@@ -85,7 +85,7 @@ CREATE TABLE member_health_allergies (
 CREATE TABLE member_employment (
     id                     UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     member_id              UUID NOT NULL UNIQUE REFERENCES members(id) ON DELETE CASCADE,
-    employment_status      TEXT,
+    employment_status      TEXT, -- ['full-time', 'part-time', 'contract', 'freelance', 'unemployed', 'gig work', 'retired']
     employment_type        TEXT[],
     total_work_hours_weekly INTEGER,
     raw_source             JSONB,
@@ -115,7 +115,7 @@ CREATE TABLE member_employment_entries (
     company_type            TEXT,
     company_annual_revenue  TEXT,
     industry                TEXT,
-    seniority               TEXT,
+    seniority_level         TEXT,
     years_in_role           INTEGER,
     years_in_industry       INTEGER,
     employment_arrangement  TEXT,

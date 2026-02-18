@@ -13,8 +13,6 @@ CREATE TABLE member_identity (
     ethnicities                 TEXT[],
     nationalities               TEXT[],
     citizenships                TEXT[],
-    country_of_residence        TEXT,
-    city                        TEXT,
     religion                    TEXT,
     socioeconomic_self_assessment TEXT,
     communication_preferences   TEXT[],
@@ -77,12 +75,16 @@ CREATE TABLE member_neuro_profile (
 CREATE TABLE member_household (
     id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     member_id         UUID NOT NULL UNIQUE REFERENCES members(id) ON DELETE CASCADE,
-    marital_status    TEXT,
+    marital_status    TEXT, -- ['married', 'divorced', 'unmarried', 'open', 'widowed']
     marital_history   TEXT[],
+    residency_status  TEXT -- ['permanent residence', 'temporary', 'citizenship]
+    country_of_residence        TEXT,
+    state_region                TEXT,
+    city                        TEXT,
+    postal_code                 TEXT,
     household_size    INTEGER,
     housing_type      TEXT,
     housing_ownership TEXT,
-    household_income  INTEGER,
     pets              TEXT[],
     pets_count        INTEGER,
     raw_source        JSONB,
@@ -94,22 +96,22 @@ CREATE TABLE member_household_dependents (
     id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     member_id       UUID NOT NULL REFERENCES members(id) ON DELETE CASCADE,
     relationship    TEXT,
-    birth_year      INTEGER,    -- not DATE; compute age at query time
+    birth_year      DATE,    -- not DATE; compute age at query time
     gender          TEXT,
-    special_needs   BOOLEAN,
+    dependency      TEXT, -- Handicapped, child, special needs, financial dependents
     education_level TEXT,
     raw_source      JSONB,
     created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at      TIMESTAMPTZ NOT NULL DEFAULT now()
 );
-
+    
 CREATE TABLE member_household_pets (
     id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     member_id   UUID NOT NULL REFERENCES members(id) ON DELETE CASCADE,
     pet_type    TEXT,        -- 'Dog', 'Cat', 'Fish', etc.
     breed       TEXT,        -- 'Golden Retriever', 'Persian', etc.
     name        TEXT,
-    age_years   INTEGER,
+    birth_year  DATE,
     raw_source  JSONB,
     created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
 );
