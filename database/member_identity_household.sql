@@ -8,6 +8,7 @@ CREATE TABLE member_identity (
     id                          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     member_id                   UUID NOT NULL UNIQUE REFERENCES members(id) ON DELETE CASCADE,
     date_of_birth               DATE,
+    country_of_birth            TEXT,
     gender_identity             TEXT,
     sexual_orientation          TEXT,
     ethnicities                 TEXT[],
@@ -77,7 +78,7 @@ CREATE TABLE member_household (
     member_id         UUID NOT NULL UNIQUE REFERENCES members(id) ON DELETE CASCADE,
     marital_status    TEXT, -- ['married', 'divorced', 'unmarried', 'open', 'widowed']
     marital_history   TEXT[],
-    residency_status  TEXT -- ['permanent residence', 'temporary', 'citizenship]
+    residency_status  TEXT, -- ['permanent residence', 'temporary', 'citizenship']
     country_of_residence        TEXT,
     state_region                TEXT,
     city                        TEXT,

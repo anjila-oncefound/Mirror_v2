@@ -65,14 +65,14 @@ CREATE TABLE member_financial_investments (
 -- BUCKET 6: PROPERTY (2 tables)
 -- ============================================================
 
-  CREATE TABLE member_property (
-      id                           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-      member_id                    UUID NOT NULL UNIQUE REFERENCES members(id) ON DELETE CASCADE,
-      significant_assets           TEXT[],        -- 'jewelry', 'art', 'collectibles' —non-property assets
-      raw_source                   JSONB,
-      created_at                   TIMESTAMPTZ NOT NULL DEFAULT now(),
-      updated_at                   TIMESTAMPTZ NOT NULL DEFAULT now()
-  );
+CREATE TABLE member_property (
+    id                           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    member_id                    UUID NOT NULL UNIQUE REFERENCES members(id) ON DELETE CASCADE,
+    significant_assets           TEXT[],        -- 'jewelry', 'art', 'collectibles' —non-property assets
+    raw_source                   JSONB,
+    created_at                   TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at                   TIMESTAMPTZ NOT NULL DEFAULT now()
+);
 
 CREATE TABLE member_property_vehicles (
     id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),

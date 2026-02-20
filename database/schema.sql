@@ -3,9 +3,10 @@
 -- Run this FIRST — everything else depends on it
 -- ============================================================
 
--- EXTENSIONS
-CREATE EXTENSION IF NOT EXISTS "pgcrypto";
-CREATE EXTENSION IF NOT EXISTS "vector";
+-- EXTENSIONS (in dedicated schema, not public)
+CREATE SCHEMA IF NOT EXISTS extensions;
+CREATE EXTENSION IF NOT EXISTS "pgcrypto" SCHEMA extensions;
+CREATE EXTENSION IF NOT EXISTS "vector" SCHEMA extensions;
 
 -- ============================================================
 -- UPDATED_AT TRIGGER FUNCTION
@@ -17,7 +18,8 @@ BEGIN
     NEW.updated_at = now();
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql
+SET search_path = public;
 
 -- ============================================================
 -- USER PROFILES (every authenticated user — staff or client)
@@ -54,6 +56,7 @@ RETURNS TEXT
 LANGUAGE sql
 STABLE
 SECURITY DEFINER
+SET search_path = public
 AS $$
     SELECT role FROM user_profiles
     WHERE id = auth.uid() AND is_active = true
@@ -64,14 +67,14 @@ $$;
 -- ============================================================
 
 CREATE TABLE members ( -- Participants
-    id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id     UUID UNIQUE REFERENCES user_profiles(id),  -- nullable until member gets portal access
-    email       TEXT UNIQUE NOT NULL,
-    phone       TEXT,
-    full_name   TEXT NOT NULL,
-    registration_country TEXT,
-    status      TEXT NOT NULL DEFAULT 'active', -- active, inactive, blocked
-    source      TEXT,
-    created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+    id                      UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id                 UUID UNIQUE REFERENCES user_profiles(id),  -- nullable until member gets portal access
+    email                   TEXT UNIQUE NOT NULL,
+    phone                   TEXT,
+    full_name               TEXT NOT NULL,
+    registration_country    TEXT,
+    status                  TEXT NOT NULL DEFAULT 'active', -- active, inactive, blocked
+    source                  TEXT,
+    created_at              TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at              TIMESTAMPTZ NOT NULL DEFAULT now()
 );
